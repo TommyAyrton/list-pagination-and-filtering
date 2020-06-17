@@ -2,7 +2,7 @@
 Treehouse Techdegree:
 FSJS project 2 - List Filter and Pagination
 ******************************************/
-   
+"use strict";
 // Study guide for this project - https://drive.google.com/file/d/1OD1diUsTMdpfMDv677TfL1xO2CEkykSz/view?usp=sharing
 
 /*** 
@@ -15,16 +15,32 @@ FSJS project 2 - List Filter and Pagination
    will only be used inside of a function, then it can be locally 
    scoped to that function.
 ***/
-const studentList = document.getElementsByClassName('student-item cf');
-const count = studentList.length;
+const studentList = document.querySelector('.student-list');
+const page = document.querySelector(".pagination");
+const numChild = studentList.childElementCount;
 const itemPerPage = 10;
-let numberOfPage = 1;
-if (count % itemPerPage > 0) {
-   numberOfPage = Math.floor(count / itemPerPage) + 1;
-} else {
-    numberOfPage = Math.round(count / itemPerPage);
-}
 
+const pagination = () => {
+  let numberOfPage = 1;
+  if (numChild % itemPerPage > 0) {
+    numberOfPage = Math.floor(numChild / itemPerPage) + 1;
+  } else {
+    numberOfPage = Math.round(numChild / itemPerPage);
+  }
+  return numberOfPage; 
+};
+
+const links = () => {  
+  const ul = document.createElement("ul");
+  page.appendChild(ul); 
+  for (let i = 1; i <= pagination(); i++) {
+    const li = document.createElement("li");
+    ul.appendChild(li);
+    const a = document.createElement('a');    
+    ul.appendChild(a);
+    li.innerHTML = `<a href="#">${i}</a>`; 
+  }
+}
 
 /*** 
    Create the `showPage` function to hide all of the items in the 
@@ -40,38 +56,27 @@ if (count % itemPerPage > 0) {
        that will be passed into the parens later when you call or 
        "invoke" the function 
 ***/
-// const showPage = (list, page) => {
-//    const startIndex = (page * listPerPage) - listPerPage;
-//    const endIndex = (page * listPerPage) - 1;
-
-//    for (let i = 0; i < list.length; i++) {
-//       if (i >= startIndex && i <= endIndex) {
-//          list[i].style.background = 'red';   
-//       }      
-//    }
-// }
-
-
+const showPage = (list, page) => {
+  const studentDetails = list.getElementsByClassName('student-item cf');
+  const startIndex = page * itemPerPage - itemPerPage;
+  const endIndex = page * itemPerPage - 1;
+  for (let i = 0; i < numChild; i++) {
+    studentDetails[i].style.display = "none";
+    if (i >= startIndex && i <= endIndex) {
+      studentDetails[i].style.display = "block";
+    }
+  }
+};
 
 /*** 
    Create the `appendPageLinks function` to generate, append, and add 
    functionality to the pagination buttons.
 ***/
 const appendPageLinks = () => {
-   const div = document.querySelector('.pagination');
-   const ul = document.createElement('ul');
-   div.appendChild(ul);   
-   //console.log(div);
-   for (let i = 1; i <= numberOfPage ; i++) {
-      const li = document.createElement('li');
-      ul.appendChild(li);
-      if (i === 1) {
-         li.innerHTML = `<a href="#" class="active">${i}</a>`;
-      } else {
-         li.innerHTML = `<a href="#">${i}</a>`; 
-      }                    
-   }   
-}
+  
+};
 
-appendPageLinks();
+page.addEventListener('click', (e) => {
+
+});
 // Remember to delete the comments that came with this file, and replace them with your own code comments.
