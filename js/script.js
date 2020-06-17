@@ -16,7 +16,7 @@ FSJS project 2 - List Filter and Pagination
    scoped to that function.
 ***/
 const studentList = document.querySelector('.student-list');
-const page = document.querySelector(".pagination");
+const pagination = document.querySelector(".pagination");
 const numChild = studentList.childElementCount;
 const itemPerPage = 10;
 
@@ -32,7 +32,7 @@ const pagination = () => {
 
 const links = () => {  
   const ul = document.createElement("ul");
-  page.appendChild(ul); 
+  pagination.appendChild(ul); 
   for (let i = 1; i <= pagination(); i++) {
     const li = document.createElement("li");
     ul.appendChild(li);
@@ -76,7 +76,7 @@ const appendPageLinks = () => {
   
 };
 
-page.addEventListener('click', (e) => {
-
+pagination.addEventListener('click', (e) => {
+  showPage(studentList,1);
 });
 // Remember to delete the comments that came with this file, and replace them with your own code comments.
