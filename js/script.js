@@ -95,11 +95,12 @@ const appendPageLinks = (list) => {
     const a = document.createElement("a");
     li.appendChild(a);
     li.innerHTML = `<a href="#">${i}</a>`;
+    // Set active class to first page
     if (i == 1) {
       li.innerHTML = `<a href="#" class="active">${i}</a>`;      
     }
   }
-  // Add event click and set class active for the first page
+  // Add event click and set active class for selected page
   pageDiv.addEventListener("click", (e) => {
     const a = document.querySelectorAll("a");
     for (let i = 0; i < a.length; i++) {
@@ -112,7 +113,7 @@ const appendPageLinks = (list) => {
 };
 
 /***
- * Call for functions
+ * Call functions
  */
 searchStudent(studentItems);
 showPage(studentItems, 1);
