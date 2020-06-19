@@ -2,87 +2,118 @@
 Treehouse Techdegree:
 FSJS project 2 - List Filter and Pagination
 ******************************************/
-"use strict";
-// Study guide for this project - https://drive.google.com/file/d/1OD1diUsTMdpfMDv677TfL1xO2CEkykSz/view?usp=sharing
 
+// Study guide for this project - https://drive.google.com/file/d/1OD1diUsTMdpfMDv677TfL1xO2CEkykSz/view?usp=sharing
+"use strict";
 /*** 
    Add your global variables that store the DOM elements you will 
-   need to reference and/or manipulate. 
-   
-   But be mindful of which variables should be global and which 
-   should be locally scoped to one of the two main functions you're 
-   going to create. A good general rule of thumb is if the variable 
-   will only be used inside of a function, then it can be locally 
-   scoped to that function.
-***/
-const studentList = document.querySelector('.student-list');
-const pageDiv = document.querySelector(".pagination");
-const numChild = studentList.childElementCount;
-const itemPerPage = 10;
+   need to reference and/or manipulate.
 
-const pagination = () => {
-  let numberOfPage = 1;
-  if (numChild % itemPerPage > 0) {
-    numberOfPage = Math.floor(numChild / itemPerPage) + 1;
-  } else {
-    numberOfPage = Math.round(numChild / itemPerPage);
-  }
-  return numberOfPage; 
+***/
+const mainDiv = document.querySelector(".page");
+const studentItems = mainDiv.getElementsByClassName("student-item cf");
+const itemsPerPage = 10;
+
+/***
+ * Function `searchStudent` 
+ * @param list = array studentItems
+ ***/
+const searchStudent = (list) => {
+  // Create search button and input 
+  const headerDiv = mainDiv.querySelector("div");
+  const div = document.createElement("div");
+  div.classList.add("student-search");
+  headerDiv.appendChild(div);
+  const input = document.createElement("input");
+  div.appendChild(input);
+  const button = document.createElement("button");
+  div.appendChild(button);
+  input.setAttribute("placeholder", "Search for students...");
+  button.innerText = "Search";
+  // Select text from input and all name´s students
+  const text = div.querySelector('input');
+  const nameStudents = mainDiv.getElementsByTagName("h3");
+  // Add event click and show the student item
+  button.addEventListener("click", (e) => {
+    if (text.value == '') {
+      alert('Enter a name');      
+    } else {
+      for (let i = 0; i < nameStudents.length; i++) {
+        const element = nameStudents[i].innerText;        
+        if (element == text.value) {
+          list[i].style.display = "block";        
+        } else {
+          list[i].style.display = "none";
+        }           
+      }
+      text.value = '';
+    }
+  });
 };
 
 /*** 
-   Create the `showPage` function to hide all of the items in the 
-   list except for the ten you want to show.
-
-   Pro Tips: 
-     - Keep in mind that with a list of 54 students, the last page 
-       will only display four.
-     - Remember that the first student has an index of 0.
-     - Remember that a function `parameter` goes in the parens when 
-       you initially define the function, and it acts as a variable 
-       or a placeholder to represent the actual function `argument` 
-       that will be passed into the parens later when you call or 
-       "invoke" the function 
+  * Function `showPage` function to hide all of the items in the 
+  * list except for the ten you want to show.
+  * @param list = array studentItems
+  * @page page = number of the link page
 ***/
 const showPage = (list, page) => {
-  const studentDetails = list.getElementsByClassName('student-item cf');
-  const startIndex = page * itemPerPage - itemPerPage;
-  const endIndex = page * itemPerPage - 1;
-  for (let i = 0; i < numChild; i++) {
-    studentDetails[i].style.display = "none";
+  const startIndex = page * itemsPerPage - itemsPerPage;
+  const endIndex = page * itemsPerPage - 1;
+  //Hide, show items
+  for (let i = 0; i < list.length; i++) {
     if (i >= startIndex && i <= endIndex) {
-      studentDetails[i].style.display = "block";
+      list[i].style.display = "block";
+    } else {
+      list[i].style.display = "none";
     }
   }
 };
 
 /*** 
-   Create the `appendPageLinks function` to generate, append, and add 
-   functionality to the pagination buttons.
+   * Funtion `appendPageLinks function` to generate, append, and add 
+   * functionality to the pagination buttons.
+   * @param list = array studentItems
 ***/
-const appendPageLinks = () => {
+const appendPageLinks = (list) => {
+  //Calculate the number of pages
+  let numbersOfPage = 1;
+  if (list.length % itemsPerPage > 0) {
+    numbersOfPage = Math.floor(list.length / itemsPerPage) + 1;
+  } else {
+    numbersOfPage = Math.round(list.length / itemsPerPage);
+  }
+  //Create pagination's list
+  const pageDiv = document.createElement("div");
+  pageDiv.classList.add("pagination");
+  mainDiv.appendChild(pageDiv);
   const ul = document.createElement("ul");
-  pageDiv.appendChild(ul); 
-  for (let i = 1; i <= pagination(); i++) {
+  pageDiv.appendChild(ul);
+  for (let i = 1; i <= numbersOfPage; i++) {
     const li = document.createElement("li");
     ul.appendChild(li);
+    const a = document.createElement("a");
+    li.appendChild(a);
     li.innerHTML = `<a href="#">${i}</a>`;
-    if (i == 1) { 
-      li.innerHTML = `<a href="#" class="active">${i}</a>`;
-      showPage(studentList,i); 
-    } 
+    if (i == 1) {
+      li.innerHTML = `<a href="#" class="active">${i}</a>`;      
+    }
   }
+  // Add event click and set class active for the first page
+  pageDiv.addEventListener("click", (e) => {
+    const a = document.querySelectorAll("a");
+    for (let i = 0; i < a.length; i++) {
+      a[i].classList.remove("active");
+    }
+    e.target.classList.add("active");
+    let value = parseInt(e.target.innerText);
+    showPage(list, value);
+  });
 };
-appendPageLinks();
 
-pageDiv.addEventListener('click', (e) => {
-  const a = document.querySelectorAll('a');
-  for (let i = 0; i < a.length; i++) {
-      a[i].classList.remove('active');
-  }
-  e.target.classList.add('active');
-  let value = parseInt(e.target.innerText);    
-  showPage(studentList,value);  
-})
-
-// Remember to delete the comments that came with this file, and replace them with your own code comments.
+/***
+ * Call for functions
+ */
+searchStudent(studentItems);
+showPage(studentItems, 1);
+appendPageLinks(studentItems);
