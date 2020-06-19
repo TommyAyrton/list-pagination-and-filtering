@@ -55,7 +55,7 @@ const showPage = (list, page) => {
     }
   }
 };
-showPage(studentList,1);
+
 /*** 
    Create the `appendPageLinks function` to generate, append, and add 
    functionality to the pagination buttons.
@@ -66,15 +66,23 @@ const appendPageLinks = () => {
   for (let i = 1; i <= pagination(); i++) {
     const li = document.createElement("li");
     ul.appendChild(li);
-    const a = document.createElement('a');    
-    ul.appendChild(a);
-    li.innerHTML = `<a href="#">${i}</a>`; 
+    li.innerHTML = `<a href="#">${i}</a>`;
+    if (i == 1) { 
+      li.innerHTML = `<a href="#" class="active">${i}</a>`;
+      showPage(studentList,i); 
+    } 
   }
 };
 appendPageLinks();
 
 pageDiv.addEventListener('click', (e) => {
-  let value = parseInt(e.target.innerText);  
-  showPage(studentList,value);
-});
+  const a = document.querySelectorAll('a');
+  for (let i = 0; i < a.length; i++) {
+      a[i].classList.remove('active');
+  }
+  e.target.classList.add('active');
+  let value = parseInt(e.target.innerText);    
+  showPage(studentList,value);  
+})
+
 // Remember to delete the comments that came with this file, and replace them with your own code comments.
